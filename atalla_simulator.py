@@ -21,12 +21,16 @@ def generate_hex(length):
     """Genera una cadena hexadecimal aleatoria de la longitud especificada."""
     return ''.join(random.choice('0123456789ABCDEF') for _ in range(length))
 
+def generate_dec(length):
+    """Genera una cadena decimal aleatoria de la longitud especificada."""
+    return ''.join(random.choice('0123456789') for _ in range(length))
+
 def handle_command_93(data):
     """Simula el Comando 93."""
     print("-> Recibido Comando 93: Generar Número Aleatorio")
     error_code = "00"
-    random_number = generate_hex(16)
-    response = f"<A3#{error_code}{random_number}>\n" # Se añade \n para limpiar el buffer del cliente
+    random_number = generate_dec(6)
+    response = f"<A3#{error_code}#{random_number}#>" # Se añade \n para limpiar el buffer del cliente
     print(f"<- Enviando Respuesta: {response.strip()}")
     return response
 
@@ -35,7 +39,7 @@ def handle_command_30(data):
     print("-> Recibido Comando 30: Encriptar PIN Formato ANSI 0")
     error_code = "00"
     encrypted_pin_block = generate_hex(16)
-    response = f"<40#{error_code}{encrypted_pin_block}>\n"
+    response = f"<40#{error_code}{encrypted_pin_block}#>"
     print(f"<- Enviando Respuesta: {response.strip()}")
     return response
 
@@ -43,7 +47,7 @@ def handle_command_37(data):
     """Simula el Comando 37."""
     print("-> Recibido Comando 37: Cambio de PIN IBM3624")
     error_code = "00"
-    response = f"<47#{error_code}>\n"
+    response = f"<47#{error_code}#>"
     print(f"<- Enviando Respuesta: {response.strip()}")
     return response
 
@@ -51,7 +55,7 @@ def handle_command_32(data):
     """Simula el Comando 32."""
     print("-> Recibido Comando 32: Verificar PIN IBM3624")
     error_code = "00" # '00' significa PIN Válido
-    response = f"<42#{error_code}>\n"
+    response = f"<42#{error_code}#>"
     print(f"<- Enviando Respuesta: {response.strip()}")
     return response
 
@@ -108,7 +112,7 @@ class AtallaTCPHandler(socketserver.BaseRequestHandler):
                     break
             
             if response:
-                self.request.sendall(response.encode('utf-8'))
+                self.request.sendall((response + '\n\r').encode('utf-8'))
             else:
                 error_msg = "<- Comando no reconocido o no simulado. No se envió respuesta.\n"
                 print(error_msg.strip())
