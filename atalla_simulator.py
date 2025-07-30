@@ -28,9 +28,8 @@ def generate_dec(length):
 def handle_command_93(data):
     """Simula el Comando 93."""
     print("-> Recibido Comando 93: Generar Número Aleatorio")
-    error_code = "00"
     random_number = generate_dec(6)
-    response = f"<A3#{error_code}#{random_number}#>" # Se añade \n para limpiar el buffer del cliente
+    response = f"<A3#{random_number}#>" # Se añade \n para limpiar el buffer del cliente
     print(f"<- Enviando Respuesta: {response.strip()}")
     return response
 
