@@ -6,14 +6,14 @@ import time
 
 """Uso del Simulador:
 1. Ejecuta este script para iniciar el servidor.
-2. Conéctate al servidor usando un cliente TCP (por ejemplo, telnet o netcat). telnet localhost 9999
+2. Conéctate al servidor usando un cliente TCP (por ejemplo, telnet o netcat). telnet localhost 7000
 3. Envía comandos en el formato <XX#...> donde XX es el código del comando. <93#D#6#>
 4. El servidor responderá con una simulación de la respuesta esperada.
 5. Puedes enviar múltiples comandos sin cerrar la conexión, el servidor mantendrá la conexión abierta.
 6. Para detener el servidor, presiona Ctrl+C en la consola donde se está ejecutando"""
 
 # --- Configuración del Servidor ---
-HOST, PORT = "localhost", 9999
+HOST, PORT = "localhost", 7000
 
 # --- Lógica de Simulación de Comandos Atalla ---
 # (Las funciones no cambian)
@@ -75,10 +75,13 @@ class AtallaTCPHandler(socketserver.BaseRequestHandler):
     """
     def handle(self):
         print(f"\n✅ Conexión persistente establecida con {self.client_address[0]}")
-        
+        self.request.sendall(('Trying 5.5.5.13...' + '\n\r').encode('utf-8'))
+        self.request.sendall(('Connected to atalla.' + '\n\r').encode('utf-8'))
+        self.request.sendall(('Escape character is \'^]\'.' + '\n\r').encode('utf-8'))
         # <<< BUCLE PARA MANTENER LA CONEXIÓN ABIERTA >>>
         while True:
             full_data_bytes = b''
+            
             # Bucle interno para leer una trama completa (terminada en > y Enter)
             while True:
                 try:
